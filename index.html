@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+  html, body { margin:0; background:transparent; overflow:hidden; }
+  * { box-sizing:border-box; }
+
+  :root{
+    --bottom: 120px;
+
+    --gold: #D4AF37;
+
+    --carpet-w: 1300px;
+    --carpet-radius: 46px;
+    --pad-y: 5px;
+
+    --title-size: 56px;
+    --name-size: 64px;
+
+    --fire-w: 200px;
+    --overlap: 30px;
+
+    --fire-drop: 0px;
+  }
+
+  @font-face{
+    font-family: "OverlayFont";
+    src: url("./images/Poppins-BlackItalic.ttf") format("truetype");
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  #wrap{
+    position: fixed;
+    left: 50%;
+    bottom: var(--bottom);
+    transform: translateX(-50%);
+    pointer-events:none;
+    text-align:center;
+  }
+
+  /* ✅ TITLE NOW USES SAME GRADIENT AS CARPET */
+  #title{
+    font-family: "OverlayFont","Segoe UI",Arial,sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: var(--title-size);
+    margin: 0 0 18px 0;
+
+    background: linear-gradient(to right,
+        #000000 0%,
+        #160000 6%,
+        #7a0000 14%,
+        #ff2a00 38%,
+        #ff2a00 62%,
+        #7a0000 86%,
+        #160000 94%,
+        #000000 100%
+    );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+
+    text-shadow:
+      0 0 10px rgba(255,120,0,0.25),
+      0 0 22px rgba(255,60,0,0.25);
+  }
+
+  #stage{
+    position: relative;
+    width: var(--carpet-w);
+    margin: 0 auto;
+  }
+
+  #carpet{
+    position: relative;
+    width: var(--carpet-w);
+    padding: var(--pad-y) 80px;
+    border-radius: var(--carpet-radius);
+
+    background:
+      linear-gradient(to right,
+        #000000 0%,
+        #160000 6%,
+        #7a0000 14%,
+        #ff2a00 38%,
+        #ff2a00 62%,
+        #7a0000 86%,
+        #160000 94%,
+        #000000 100%
+      );
+
+    box-shadow:
+      0 0 35px rgba(255,140,0,0.45),
+      0 0 70px rgba(255,60,0,0.30),
+      0 18px 60px rgba(0, 0, 0, 0.45);
+
+    outline: 1px solid rgba(255,180,80,0.25);
+  }
+
+  #name{
+    font-family: "OverlayFont","Segoe UI",Arial,sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #D4AF37;
+
+    font-size: var(--name-size);
+    line-height: 1;
+    text-align: center;
+
+    text-shadow:
+      0 0 14px rgba(255,210,120,0.45),
+      0 0 26px rgba(255,80,0,0.30);
+  }
+
+  .fire{
+    position: absolute;
+    width: var(--fire-w);
+    height: auto;
+    bottom: 0;
+    transform: translateY(var(--fire-drop));
+    z-index: 3;
+
+    filter: drop-shadow(0 0 18px rgba(255, 90, 0, 0.45));
+    pointer-events:none;
+  }
+
+  .fire.left{
+    left: calc(-1 * (var(--fire-w) - var(--overlap)) + 80px);
+  }
+  .fire.right{
+    left: calc(var(--carpet-w) - var(--overlap) - 80px);
+  }
+
+  @media (max-width: 1400px){
+    :root{ --carpet-w: min(1300px, 92vw); }
+  }
+</style>
+</head>
+
+<body>
+  <div id="wrap">
+    <div id="title">LAST LIVE MVP</div>
+
+    <div id="stage">
+      <img class="fire left"  src="images/fire.png" alt="">
+      <div id="carpet">
+        <div id="name">VLADI13_12</div>
+      </div>
+      <img class="fire right" src="images/fire.png" alt="">
+    </div>
+  </div>
+</body>
+</html>
