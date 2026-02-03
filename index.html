@@ -11,19 +11,24 @@
   :root{
     --bottom: 120px;
 
-    --gold: #D4AF37;
-
-    --carpet-w: 1300px;
-    --carpet-radius: 46px;
-    --pad-y: 5px;
+    --heart-h: 260px;
+    --heart-scale: 1;
 
     --title-size: 56px;
-    --name-size: 64px;
+    --name-size: 46px;
 
-    --fire-w: 200px;
-    --overlap: 30px;
+    --page-ms: 6000ms;
+    --fade-ms: 1000ms;
 
-    --fire-drop: 0px;
+    --carpet-w: 860px;
+    --stage-w: 1080px;
+
+    --carpet-h: 110px;
+    --carpet-radius: 40px;
+
+    --pad-left: 28px;
+    --pad-right: 28px;
+    --title-offset: 50px;
   }
 
   @font-face{
@@ -36,131 +41,184 @@
 
   #wrap{
     position: fixed;
-    left: 50%;
+    left:0; right:0;
     bottom: var(--bottom);
-    transform: translateX(-50%);
+    display:flex;
+    justify-content:center;
     pointer-events:none;
-    text-align:center;
   }
 
-  /* ✅ TITLE NOW USES SAME GRADIENT AS CARPET */
+  #frame{
+    position: relative;
+    width: min(1080px, 100vw);
+    height: max(var(--heart-h), var(--carpet-h));
+  }
+
   #title{
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate3d(0, calc(-1 * var(--title-offset)), 0);
+
     font-family: "OverlayFont","Segoe UI",Arial,sans-serif;
     font-weight: 900;
     font-style: italic;
-    text-transform: uppercase;
-    letter-spacing: 3px;
     font-size: var(--title-size);
-    margin: 0 0 18px 0;
-
-    background: linear-gradient(to right,
-        #000000 0%,
-        #160000 6%,
-        #7a0000 14%,
-        #ff2a00 38%,
-        #ff2a00 62%,
-        #7a0000 86%,
-        #160000 94%,
-        #000000 100%
-    );
-
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-
-    text-shadow:
-      0 0 10px rgba(255,120,0,0.25),
-      0 0 22px rgba(255,60,0,0.25);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #D4AF37;
+    white-space: nowrap;
+    z-index: 2;
   }
 
   #stage{
-    position: relative;
-    width: var(--carpet-w);
-    margin: 0 auto;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--stage-w);
+    height: 100%;
   }
 
-  #carpet{
+  #rotator{
     position: relative;
+    width: 100%;
+    height: 100%;
+    transition: opacity var(--fade-ms) linear;
+  }
+  #rotator.out{ opacity:0; }
+
+  /* Carpet */
+  #carpet{
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate3d(0, -50%, 0);
     width: var(--carpet-w);
-    padding: var(--pad-y) 80px;
+    height: var(--carpet-h);
     border-radius: var(--carpet-radius);
 
-    background:
-      linear-gradient(to right,
-        #000000 0%,
-        #160000 6%,
-        #7a0000 14%,
-        #ff2a00 38%,
-        #ff2a00 62%,
-        #7a0000 86%,
-        #160000 94%,
-        #000000 100%
-      );
+    background: linear-gradient(
+      180deg,
+      #7a0f1f 0%,
+      #5a0c17 45%,
+      #3d0810 100%
+    );
+
+    border: 4.5px solid #d4af37;
 
     box-shadow:
-      0 0 35px rgba(255,140,0,0.45),
-      0 0 70px rgba(255,60,0,0.30),
-      0 18px 60px rgba(0, 0, 0, 0.45);
-
-    outline: 1px solid rgba(255,180,80,0.25);
+      0 0 22px rgba(120, 0, 40, 0.45),
+      0 0 60px rgba(60, 0, 20, 0.35);
   }
 
   #name{
+    position: absolute;
+    left: var(--pad-left);
+    right: calc(var(--heart-h) * var(--heart-scale) + var(--pad-right));
+    top: 50%;
+    transform: translate3d(0, -50%, 0);
+    height: var(--carpet-h);
+    display:flex;
+    align-items:center;
+
     font-family: "OverlayFont","Segoe UI",Arial,sans-serif;
     font-weight: 900;
     font-style: italic;
+    font-size: var(--name-size);
+    letter-spacing: 2px;
     text-transform: uppercase;
-    letter-spacing: 3px;
     color: #D4AF37;
 
-    font-size: var(--name-size);
-    line-height: 1;
-    text-align: center;
-
-    text-shadow:
-      0 0 14px rgba(255,210,120,0.45),
-      0 0 26px rgba(255,80,0,0.30);
+    white-space: nowrap;
+    overflow: hidden;
   }
 
-  .fire{
+  /* Heart default (right aligned) */
+  #scanner{
     position: absolute;
-    width: var(--fire-w);
-    height: auto;
-    bottom: 0;
-    transform: translateY(var(--fire-drop));
-    z-index: 3;
-
-    filter: drop-shadow(0 0 18px rgba(255, 90, 0, 0.45));
-    pointer-events:none;
+    right: var(--pad-right);
+    top: 50%;
+    transform: translate3d(0, -50%, 0);
+    z-index: 5;
+    transition: transform 300ms ease;
   }
 
-  .fire.left{
-    left: calc(-1 * (var(--fire-w) - var(--overlap)) + 80px);
-  }
-  .fire.right{
-    left: calc(var(--carpet-w) - var(--overlap) - 80px);
+  /* 👇 First page offset */
+  #scanner.shift-left{
+    transform: translate3d(-50px, -50%, 0);
   }
 
-  @media (max-width: 1400px){
-    :root{ --carpet-w: min(1300px, 92vw); }
+  #heart{
+    height: calc(var(--heart-h) * var(--heart-scale));
+    width: auto;
+    display:block;
   }
 </style>
 </head>
 
 <body>
   <div id="wrap">
-    <div id="title">LAST LIVE MVP</div>
+    <div id="frame">
+      <div id="title">TOP MEMBERS</div>
 
-    <div id="stage">
-      <img class="fire left"  src="images/fire.png" alt="">
-      <div id="carpet">
-        <div id="name">NIKOLA TASHEV</div>
+      <div id="stage">
+        <div id="rotator">
+          <div id="carpet"></div>
+          <div id="name">POPEVA - 46</div>
+          <div id="scanner">
+            <img id="heart" src="images/top.png" alt="icon">
+          </div>
+        </div>
       </div>
-      <img class="fire right" src="images/fire.png" alt="">
     </div>
   </div>
+
+<script>
+  const PAGE_MS = 6000;
+  const FADE_MS = 1000;
+
+  const pages = [
+    { img: "images/top.png", text: "POPEVA - 46" },
+    { img: "images/mid.png", text: "SALVIOR - 37" },
+    { img: "images/mid.png", text: "GHOST RIDER - 34" },
+    { img: "images/mid.png", text: "LINIQ - 30" },
+    { img: "images/low.png", text: "VLADI13_12 - 29" },
+    { img: "images/low.png", text: "OBERON - 28" }
+  ];
+
+  const rotator = document.getElementById("rotator");
+  const heart   = document.getElementById("heart");
+  const nameEl  = document.getElementById("name");
+  const scanner = document.getElementById("scanner");
+
+  let idx = 0;
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  async function showPage(p, index){
+    nameEl.textContent = p.text;
+    heart.src = p.img;
+
+    // Apply shift ONLY on first page
+    if(index === 0){
+      scanner.classList.add("shift-left");
+    } else {
+      scanner.classList.remove("shift-left");
+    }
+
+    rotator.classList.remove("out");
+    await sleep(PAGE_MS);
+  }
+
+  async function cycle(){
+    while(true){
+      await showPage(pages[idx], idx);
+      rotator.classList.add("out");
+      await sleep(FADE_MS);
+      idx = (idx + 1) % pages.length;
+    }
+  }
+
+  cycle();
+</script>
 </body>
 </html>
-
-
-
