@@ -11,24 +11,19 @@
   :root{
     --bottom: 120px;
 
-    --heart-h: 260px;
-    --heart-scale: 1;
+    --gold: #D4AF37;
+
+    --carpet-w: 1300px;
+    --carpet-radius: 46px;
+    --pad-y: 5px;
 
     --title-size: 56px;
-    --name-size: 46px;
+    --name-size: 64px;
 
-    --page-ms: 6000ms;
-    --fade-ms: 1000ms;
+    --fire-w: 200px;
+    --overlap: 30px;
 
-    --carpet-w: 860px;
-    --stage-w: 1080px;
-
-    --carpet-h: 110px;
-    --carpet-radius: 40px;
-
-    --pad-left: 28px;
-    --pad-right: 28px;
-    --title-offset: 50px;
+    --fire-drop: 0px;
   }
 
   @font-face{
@@ -41,60 +36,40 @@
 
   #wrap{
     position: fixed;
-    left:0; right:0;
+    left: 50%;
     bottom: var(--bottom);
-    display:flex;
-    justify-content:center;
+    transform: translateX(-50%);
     pointer-events:none;
+    text-align:center;
   }
 
-  #frame{
-    position: relative;
-    width: min(1080px, 100vw);
-    height: max(var(--heart-h), var(--carpet-h));
-  }
-
+  /* 🥇 Title now gold instead of gradient */
   #title{
-    position: absolute;
-    left: 0;
-    top: 0;
-    transform: translate3d(0, calc(-1 * var(--title-offset)), 0);
-
     font-family: "OverlayFont","Segoe UI",Arial,sans-serif;
     font-weight: 900;
     font-style: italic;
-    font-size: var(--title-size);
-    letter-spacing: 3px;
     text-transform: uppercase;
-    color: #D4AF37;
-    white-space: nowrap;
-    z-index: 2;
+    letter-spacing: 3px;
+    font-size: var(--title-size);
+    margin: 0 0 18px 0;
+    color: var(--gold);
+
+    text-shadow:
+      0 0 14px rgba(255,210,120,0.35),
+      0 0 28px rgba(255,180,0,0.25);
   }
 
   #stage{
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: var(--stage-w);
-    height: 100%;
-  }
-
-  #rotator{
     position: relative;
-    width: 100%;
-    height: 100%;
-    transition: opacity var(--fade-ms) linear;
-  }
-  #rotator.out{ opacity:0; }
-
-  /* Carpet */
-  #carpet{
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translate3d(0, -50%, 0);
     width: var(--carpet-w);
-    height: var(--carpet-h);
+    margin: 0 auto;
+  }
+
+  /* 🍷 Burgundy Luxury Carpet */
+  #carpet{
+    position: relative;
+    width: var(--carpet-w);
+    padding: var(--pad-y) 80px;
     border-radius: var(--carpet-radius);
 
     background: linear-gradient(
@@ -104,121 +79,67 @@
       #3d0810 100%
     );
 
-    border: 4.5px solid #d4af37;
+    border: 4.5px solid var(--gold);
 
     box-shadow:
-      0 0 22px rgba(120, 0, 40, 0.45),
-      0 0 60px rgba(60, 0, 20, 0.35);
+      0 0 24px rgba(120, 0, 40, 0.45),
+      0 0 60px rgba(60, 0, 20, 0.35),
+      0 18px 60px rgba(0, 0, 0, 0.45);
   }
 
   #name{
-    position: absolute;
-    left: var(--pad-left);
-    right: calc(var(--heart-h) * var(--heart-scale) + var(--pad-right));
-    top: 50%;
-    transform: translate3d(0, -50%, 0);
-    height: var(--carpet-h);
-    display:flex;
-    align-items:center;
-
     font-family: "OverlayFont","Segoe UI",Arial,sans-serif;
     font-weight: 900;
     font-style: italic;
-    font-size: var(--name-size);
-    letter-spacing: 2px;
     text-transform: uppercase;
-    color: #D4AF37;
+    letter-spacing: 3px;
+    color: var(--gold);
 
-    white-space: nowrap;
-    overflow: hidden;
+    font-size: var(--name-size);
+    line-height: 1;
+    text-align: center;
+
+    text-shadow:
+      0 0 14px rgba(255,210,120,0.35),
+      0 0 26px rgba(255,180,0,0.25);
   }
 
-  /* Heart default (right aligned) */
-  #scanner{
+  .fire{
     position: absolute;
-    right: var(--pad-right);
-    top: 50%;
-    transform: translate3d(0, -50%, 0);
-    z-index: 5;
-    transition: transform 300ms ease;
+    width: var(--fire-w);
+    height: auto;
+    bottom: 0;
+    transform: translateY(var(--fire-drop));
+    z-index: 3;
+
+    filter: drop-shadow(0 0 18px rgba(255, 90, 0, 0.45));
+    pointer-events:none;
   }
 
-  /* 👇 First page offset */
-  #scanner.shift-left{
-    transform: translate3d(-50px, -50%, 0);
+  .fire.left{
+    left: calc(-1 * (var(--fire-w) - var(--overlap)) + 80px);
+  }
+  .fire.right{
+    left: calc(var(--carpet-w) - var(--overlap) - 80px);
   }
 
-  #heart{
-    height: calc(var(--heart-h) * var(--heart-scale));
-    width: auto;
-    display:block;
+  @media (max-width: 1400px){
+    :root{ --carpet-w: min(1300px, 92vw); }
   }
 </style>
 </head>
 
 <body>
   <div id="wrap">
-    <div id="frame">
-      <div id="title">TOP MEMBERS</div>
+    <div id="title">LAST LIVE MVP</div>
 
-      <div id="stage">
-        <div id="rotator">
-          <div id="carpet"></div>
-          <div id="name">POPEVA - 46</div>
-          <div id="scanner">
-            <img id="heart" src="images/top.png" alt="icon">
-          </div>
-        </div>
+    <div id="stage">
+      <img class="fire left"  src="images/fire.png" alt="">
+      <div id="carpet">
+        <div id="name">VLADI13_12</div>
       </div>
+      <img class="fire right" src="images/fire.png" alt="">
     </div>
   </div>
-
-<script>
-  const PAGE_MS = 6000;
-  const FADE_MS = 1000;
-
-  const pages = [
-    { img: "images/top.png", text: "POPEVA - 46" },
-    { img: "images/mid.png", text: "SALVIOR - 37" },
-    { img: "images/mid.png", text: "GHOST RIDER - 34" },
-    { img: "images/mid.png", text: "LINIQ - 30" },
-    { img: "images/low.png", text: "VLADI13_12 - 29" },
-    { img: "images/low.png", text: "OBERON - 28" }
-  ];
-
-  const rotator = document.getElementById("rotator");
-  const heart   = document.getElementById("heart");
-  const nameEl  = document.getElementById("name");
-  const scanner = document.getElementById("scanner");
-
-  let idx = 0;
-  const sleep = ms => new Promise(r => setTimeout(r, ms));
-
-  async function showPage(p, index){
-    nameEl.textContent = p.text;
-    heart.src = p.img;
-
-    // Apply shift ONLY on first page
-    if(index === 0){
-      scanner.classList.add("shift-left");
-    } else {
-      scanner.classList.remove("shift-left");
-    }
-
-    rotator.classList.remove("out");
-    await sleep(PAGE_MS);
-  }
-
-  async function cycle(){
-    while(true){
-      await showPage(pages[idx], idx);
-      rotator.classList.add("out");
-      await sleep(FADE_MS);
-      idx = (idx + 1) % pages.length;
-    }
-  }
-
-  cycle();
-</script>
 </body>
 </html>
