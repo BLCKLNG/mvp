@@ -3,12 +3,14 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+
 <style>
   html, body { margin:0; background:transparent; overflow:hidden; }
   * { box-sizing:border-box; }
 
   :root{
     --bottom: 120px;
+
     --gold: #D4AF37;
 
     --carpet-w: 1300px;
@@ -20,6 +22,7 @@
 
     --fire-w: 200px;
     --overlap: 30px;
+
     --fire-drop: 0px;
   }
 
@@ -40,6 +43,7 @@
     text-align:center;
   }
 
+  /* Title */
   #title{
     font-family: "OverlayFont","Segoe UI",Arial,sans-serif;
     font-weight: 900;
@@ -49,6 +53,7 @@
     font-size: var(--title-size);
     margin: 0 0 18px 0;
     color: var(--gold);
+
     text-shadow:
       0 0 14px rgba(255,210,120,0.35),
       0 0 28px rgba(255,180,0,0.25);
@@ -60,13 +65,20 @@
     margin: 0 auto;
   }
 
+  /* Carpet */
   #carpet{
     position: relative;
     width: var(--carpet-w);
     padding: var(--pad-y) 80px;
     border-radius: var(--carpet-radius);
 
-    background: linear-gradient(180deg,#7a0f1f 0%,#5a0c17 45%,#3d0810 100%);
+    background: linear-gradient(
+      180deg,
+      #7a0f1f 0%,
+      #5a0c17 45%,
+      #3d0810 100%
+    );
+
     border: 4.5px solid var(--gold);
 
     box-shadow:
@@ -74,39 +86,56 @@
       0 0 60px rgba(60, 0, 20, 0.35),
       0 18px 60px rgba(0, 0, 0, 0.45);
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    /* keep name centered */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     z-index: 2;
-  }
 
-  #name{
+    /* safety net: even if #name fails, text stays styled */
+    color: var(--gold);
     font-family: "OverlayFont","Segoe UI",Arial,sans-serif;
     font-weight: 900;
     font-style: italic;
     text-transform: uppercase;
     letter-spacing: 3px;
-    color: var(--gold);
+  }
+
+  /* Name (same font as title) */
+  #name{
+    font-family: inherit;
+    font-weight: inherit;
+    font-style: inherit;
+    text-transform: inherit;
+    letter-spacing: inherit;
+
     font-size: var(--name-size);
     line-height: 1;
+    text-align: center;
+
     text-shadow:
       0 0 14px rgba(255,210,120,0.35),
       0 0 26px rgba(255,180,0,0.25);
   }
 
   .fire{
-    position:absolute;
+    position: absolute;
     width: var(--fire-w);
-    height:auto;
-    bottom:0;
+    height: auto;
+    bottom: 0;
     transform: translateY(var(--fire-drop));
-    z-index:3;
+    z-index: 3;
+
     filter: drop-shadow(0 0 18px rgba(255, 90, 0, 0.45));
     pointer-events:none;
   }
 
-  .fire.left{  left: calc(-1 * (var(--fire-w) - var(--overlap)) + 80px); }
-  .fire.right{ left: calc(var(--carpet-w) - var(--overlap) - 80px); }
+  .fire.left{
+    left: calc(-1 * (var(--fire-w) - var(--overlap)) + 80px);
+  }
+  .fire.right{
+    left: calc(var(--carpet-w) - var(--overlap) - 80px);
+  }
 
   @media (max-width: 1400px){
     :root{ --carpet-w: min(1300px, 92vw); }
@@ -120,27 +149,27 @@
 
     <div id="stage">
       <img class="fire left"  src="./images/fire.png" alt="">
-      <div id="carpet"><div id="name">LOADING...</div></div>
+      <div id="carpet">
+        <div id="name">LOADING...</div>
+      </div>
       <img class="fire right" src="./images/fire.png" alt="">
     </div>
   </div>
 
-<script>
-  // Reads name.txt and updates the overlay.
-  // Cache-bust ensures OBS/Browser Source actually refreshes.
-  async function loadName(){
-    try{
-      const res = await fetch("./name.txt?ts=" + Date.now(), { cache: "no-store" });
-      const txt = (await res.text()).trim();
-      document.getElementById("name").textContent = txt || "—";
-    }catch(e){
-      document.getElementById("name").textContent = "—";
+  <script>
+    async function loadName(){
+      try{
+        const res = await fetch("./name.txt?ts=" + Date.now(), { cache: "no-store" });
+        const txt = (await res.text()).trim();
+        document.getElementById("name").textContent = txt || "—";
+      }catch(e){
+        document.getElementById("name").textContent = "—";
+      }
     }
-  }
 
-  loadName();
-  // optional: re-check every 5 seconds so you never have to refresh the source
-  setInterval(loadName, 5000);
-</script>
+    loadName();
+    // updates automatically so you only edit name.txt
+    setInterval(loadName, 5000);
+  </script>
 </body>
 </html>
